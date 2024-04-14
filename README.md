@@ -1,9 +1,230 @@
+/*
+ Author : Bassant Salem Tohami   _ID : 20231035 _s11
+        : grayscale_merge images_Darken and lighten images_detect edges_sunlight_main
+Author : Samaa Alaa Abdelmaqsoud  _ID : 20231035 _s11
+        :black and white_flip image_Crop Images_Resizing Images_purple
+Author : Marwa Sayed Sallam  ID : 20231158 _s11
+        :Invert Image_Rotate Image_ِAdding a Frame to the Picture_Blur Images_oil painting
+link of our repo on github :
+            https://github.com/SamaaAlaa1/Assignment-3.git
+link of the diagram :
+        https://drive.google.com/file/d/1XqwfDdx95vggXi2vvnk9bGtNcsAdSMbi/view?usp=sharing
 
+  */
 #include <iostream>
 #include"Image_Class.h"
 #include<string>
 #include<fstream>
 using namespace std;
+void lighten_and_darken(string& image_name, Image& image){
+    cout<<"Enter your choice.......\n1-Make the image lighter\n2-Make the image darker"<<endl;
+    int choice;
+    cin>>choice;
+    if(choice == 1){
+       for(int i=0; i<image.width; i++){
+            for(int j=0; j<image.height; j++){
+                for(int k=0; k<3; k++){
+
+                    round(image(i,j,k) += 14.33);
+                    if(image(i,j,k) > 255){
+                        image(i,j,k) = 255;
+                    }if(image(i,j,k) < 0){
+                        image(i,j,k) = 0;
+                    }
+                }
+            }
+        }
+    }if(choice == 2){
+        for(int i=0; i<image.width; i++){
+            for(int j=0; j<image.height; j++){
+                for(int k=0; k<3; k++){
+                    if(image(i,j,k) > 255){
+                        image(i,j,k) = 255;
+                    }if(image(i,j,k) < 0){
+                        image(i,j,k) = 0;
+                    }
+                    trunc(image(i,j,k) *= 0.33);
+                    if(image(i,j,k) < 0){
+                        image(i,j,k) = 0;
+                    }
+                }
+            }
+        }
+    }
+}
+void merge(string name1){
+    Image image1(name1);
+    string name2;
+    while(true){
+        cout<<"Enter the second image name to apply merge:\n";
+        cin>>name2;
+        Image image2(name2);
+        if(!is_valid(name2)){
+            cout<<"\aThe image is not found please try again:\n";
+        }else{
+            try {
+                Image image2(name2);
+                cout<<"-----------The image is loaded successfully---------\n";
+                break;
+            }catch(exception) {
+                cout<<"Invalid input please try again...\a\n";
+            }
+        }
+    }Image image2(name2);
+    cout<<"Enter your choice to apply merge on..........\n1- Resize one of two images\n2- Apply on the common area\n";
+    int merge_choice;
+    cin>>merge_choice;
+    if(merge_choice == 1){
+        cout<<"Enter your choice ......\n1- Resize to the bigger one\n2- Resize to the smaller one\n";
+        int resize_choice;
+        cin>>resize_choice;
+        if(resize_choice == 1){
+            int maxwidth = max(image1.width, image2.width);
+            int maxheight = max(image1.height, image2.height);
+            Image image(maxwidth, maxheight);
+
+            if(maxwidth == image2.width && maxheight == image2.height){
+                float newwidth = float(image1.width) / maxwidth;
+                float newheight =float( image1.height) / maxheight;
+                Image resized(maxwidth, maxheight);
+                for(float i=0; i<maxwidth; i++){
+                    for(float j=0; j<maxheight; j++){
+                        int w = round(i*newwidth);
+                        int h = round(j*newheight);
+                        for(int k=0; k<3 ; k++){
+                            resized(i, j, k) = image1(w, h, k);
+                        }
+                    }
+                }for(int i=0; i<maxwidth; i++){
+                    for(int j=0; j<maxheight; j++){
+                        for(int k=0; k<3; k++){
+                            image(i, j, k) = (image2(i, j, k) + resized(i, j, k))/2;
+                        }
+                    }
+                }
+
+
+            }if(image1.width == maxwidth && image1.height == maxheight){
+                float newwidth = float(image2.width) / maxwidth;
+                float newheight = float(image2.height) / maxheight;
+                Image resized(maxwidth, maxheight);
+                for(float i=0; i<maxwidth; i++){
+                    for(float j=0; j<maxheight; j++){
+                        int w = round(i*newwidth);
+                        int h = round(j*newheight);
+                        for(int k=0; k<3 ; k++){
+                            resized(i, j, k) = image2(w, h, k);
+                        }
+                    }
+                }for(int i=0; i<maxwidth; i++){
+                    for(int j=0; j<maxheight; j++){
+                        for(int k=0; k<3; k++){
+                            image(i, j, k) = (image1(i, j, k) + resized(i, j, k))/2;
+                        }
+                    }
+                }
+
+
+            }
+        }else if(resize_choice == 2){
+            int minwidth = min(image1.width, image2.width);
+            int minheight = min(image1.height, image2.height);
+            Image image(minwidth, minheight);
+
+            if(minwidth == image2.width && minheight == image2.height){
+                float newwidth = float(image1.width) / minwidth;
+                float newheight =float( image1.height) / minheight;
+                Image resized(minwidth, minheight);
+                for(float i=0; i<minwidth; i++){
+                    for(float j=0; j<minheight; j++){
+                        int w = round(i*newwidth);
+                        int h = round(j*newheight);
+                        for(int k=0; k<3 ; k++){
+                            resized(i, j, k) = image1(w, h, k);
+                        }
+                    }
+                }for(int i=0; i<minwidth; i++){
+                    for(int j=0; j<minheight; j++){
+                        for(int k=0; k<3; k++){
+                            image(i, j, k) = (image2(i, j, k) + resized(i, j, k))/2;
+                        }
+                    }
+                }
+
+            }if(image1.width == minwidth && image1.height == minheight){
+                float newwidth = float(image2.width) / minwidth;
+                float newheight = float(image2.height) / minheight;
+                Image resized(minwidth, minheight);
+                for(float i=0; i<minwidth; i++){
+                    for(float j=0; j<minheight; j++){
+                        int w = round(i*newwidth);
+                        int h = round(j*newheight);
+                        for(int k=0; k<3 ; k++){
+                            resized(i, j, k) = image2(w, h, k);
+                        }
+                    }
+                }for(int i=0; i<minwidth; i++){
+                    for(int j=0; j<minheight; j++){
+                        for(int k=0; k<3; k++){
+                            image(i, j, k) = (image1(i, j, k) + resized(i, j, k))/2;
+                        }
+                    }
+                }
+
+
+            }
+        }else{
+            cout<<"Invalid input please try again\a\n";
+        }
+    }
+    else if(merge_choice == 2) {
+        int commomnwidth = min(image1.width, image2.width);
+        int commonheight = min(image1.height, image2.height);
+        Image image(commomnwidth, commonheight);
+        for (int i = 0; i < commomnwidth; i++) {
+            for (int j = 0; j < commonheight; j++) {
+                for (int k = 0; k < 3; k++) {
+                    image(i, j, k) = (image1(i, j, k) + image2(i, j, k)) / 2;
+                }
+            }
+        }
+        while (true){
+            cout<<"Enter your choice.......\n1- store a new image\n2- exciting without save\n";
+            int save_choice;
+            cin>>save_choice;
+            if(save_choice == 1){
+                string filename;
+                cout<<"Enter the new image name  with extension:\n(.jpg , .bmp, .png, .tga\n";
+                cin>>filename;
+                image.saveImage(filename);
+                cout << "....the image is saved successfully...." << endl;
+                break;
+            }else if (save_choice == 2){
+                cout<<"Exciting the program...............\n";
+                break;
+            }else{
+                cout<<"\aInvalid input please try again\n";
+            }
+        }
+
+    }else{
+        cout<<"Invalid choice try again....\a\n";
+    }
+}
+void sunlight(string& image_name, Image& image){
+    for(int i=0; i<image.width; i++){
+        for(int j=0; j<image.height; j++){
+            image(i, j, 2) *= 0.5;
+        }
+    }for(int i=0; i<image.width; i++){
+        for(int j=0; j<image.height;j++){
+            for(int k=0; k<3; k++){
+                if(image(i,j,k) > 255 ) image(i, j, k) = 255;
+                if(image(i,j,k) < 0 ) image(i, j, k) = 0;
+            }
+        }
+    }
+}
 bool is_valid(const string&image_name){
     ifstream file(image_name);
     return file.good();
@@ -281,16 +502,27 @@ void saveandload_again(string&image_name, Image&image){
             cout<<"\aInvalid input please try again\n";
         }
     }
-}
-int main(){
+}int main(){
     string image_name;
     while(true) {
+
         cout << "Enter the name of the image you want to apply the filter on:\n";
-        cin >> image_name;
+        while(true) {
+            cin >> image_name;
+
+            string extention = image_name.substr((image_name.length() - 4), image_name.length());
+            if (extention != ".jpg" && extention != ".bmp" && extention != ".png" && extention != ".tga") {
+                cout << "the extention is not true...\a" << endl;
+                continue;
+            }else{
+                break;
+            }
+        }Image image (image_name);
         if(!is_valid(image_name)){
             cout << "\aThe image is not found please try again....\n";
         }else {
             try {
+
                 Image image(image_name);
                 cout << "------------image loaded successfully----------\n";
                 break;
@@ -299,7 +531,8 @@ int main(){
                 cout << "\aincorrect input please try again....\n";
             }
         }
-    }while(true) {
+    }
+while(true) {
         Image image(image_name);
         int filter_choice;
         cout<<"1- Grayscale conversion\n2- Black and white\n3- Invert image\n4- Merge images\n5- Flip image\n6- Rotate image\n7- Darken and lighten image\n8- Crop image\n9- Adding frame to the picture\n10- Detect Image Edges\n11- Resizing Images\n12- Blur Images\n13- natural sunlight\n14- Oil painting\n15- purple\n16- Exit\nEnter your choice\n";
@@ -313,11 +546,18 @@ int main(){
         }else if(filter_choice == 3){
             image_inverter(image_name, image);
             saveandload_again(image_name, image);
-        }else if(filter_choice == 5){
+        }else if(filter_choice == 4){
+            merge(image_name);
+           
+        }
+        else if(filter_choice == 5){
             flip_image(image_name, image);
             saveandload_again(image_name, image);
         }else if(filter_choice == 6) {
             rotation(image_name, image);
+            saveandload_again(image_name, image);
+        }else if(filter_choice == 7){
+            lighten_and_darken(image_name, image);
             saveandload_again(image_name, image);
         }
         else if(filter_choice == 8){
@@ -328,6 +568,9 @@ int main(){
             resize(image_name, image);
             saveandload_again(image_name, image);
 
+        }else if(filter_choice == 13){
+            sunlight(image_name, image);
+            saveandload_again(image_name, image);
         }
         else if(filter_choice == 15){
             purble(image_name, image);
