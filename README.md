@@ -30,35 +30,7 @@ void grayscale(string& image_name, Image& image ) {
         }
     }
 }
-void save1(string & image_name, Image & image ) {
-    while (true) {
-        cout << "1- Apply the filter on the current image\n2- store a new image\n3- Exit without save\n";
-        int save_choice;
-        cin >> save_choice;
-        if (save_choice == 1) {
-            image.saveImage(image_name);
-            cout << "....the image is saved successfully...." << endl;
-            break;
-        } else if (save_choice == 2) {
-            string filename;
-            cout << "Enter the name of the new image with extension:\n(.jpg , .bmp, .png, .tga\n";
-            cin >> filename;
-            string extention = filename.substr((filename.length() - 4), filename.length());
-            if (extention != ".jpg" && extention != ".bmp" && extention != ".png" && extention != ".tga") {
-                cout << "the extention is not true...\a" << endl;
-                continue;
-            }
-            image.saveImage(filename);
-            cout << "....the image is saved successfully...." << endl;
-            break;
-        } else if (save_choice == 3) {
-            cout << "\aExiting the program..........\n";
-            break;
-        } else {
-            cout << "\aInvalid input try again:\n";
-        }
-    }
-}
+
 void black_white(string& image_name, Image& image) {
    for (int i = 0; i < image.width; i++) {
         for (int j = 0; j < image.height; j++) {
@@ -193,12 +165,12 @@ void rotation ( string& image_name, Image& image) {
         }
     }
 }
-void load_again(){
-    cout<<"Do you want to load a new image: (y/n)\n";
-    string load_choice;
+void saveandload_again(string&image_name, Image&image){
+    cout<<"Enter your choice\n1- load a new image\n2- Save image\n3- continue applying filters\n";
+    int user_choice;
     while (true) {
-        cin >> load_choice;
-        if (load_choice == "y") {
+        cin >> user_choice;
+        if (user_choice == 1) {
             string image_name;
             while (true) {
                 cout << "Enter the name of the image you want to apply the filter on:\n";
@@ -218,9 +190,41 @@ void load_again(){
                     }
                 }
             }
-        } else if (load_choice == "n") {
+        }
+        else if (user_choice == 2) {
+            while (true) {
+                cout << "1- Apply the filter on the current image\n2- store a new image\n3- Exit without save\n";
+                int save_choice;
+                cin >> save_choice;
+                if (save_choice == 1) {
+                    image.saveImage(image_name);
+                    cout << "....the image is saved successfully...." << endl;
+                    break;
+                } else if (save_choice == 2) {
+                    string filename;
+                    cout << "Enter the name of the new image with extension:\n(.jpg , .bmp, .png, .tga\n";
+                    cin >> filename;
+                    string extention = filename.substr((filename.length() - 4), filename.length());
+                    if (extention != ".jpg" && extention != ".bmp" && extention != ".png" && extention != ".tga") {
+                        cout << "the extention is not true...\a" << endl;
+                        continue;
+                    }
+                    image.saveImage(filename);
+                    cout << "....the image is saved successfully...." << endl;
+                    break;
+                } else if (save_choice == 3) {
+                    cout << "\aExiting the program..........\n";
+                    break;
+                }
+                else {
+                    cout << "\aInvalid input try again:\n";
+                }
+            }
             break;
-        }else{
+        }else if(user_choice == 3){
+            break;
+        }
+        else{
             cout<<"\aInvalid input please try again\n";
         }
     }
@@ -248,27 +252,25 @@ int main(){
     }while(true) {
         Image image(image_name);
         int filter_choice;
-        cout<<"1- Grayscale conversion\n2- Black and white\n3- Invert image\n4- Merge images\n5- Flip image\n6- Rotate image\n7- Darken and lighten image\n8- Crop image\n9- Adding frame to the picture\n10- Detect Image Edges\n11- Resizing Images\n12- Blur Images\n13- natural sunlight\n14- Oil painting\n15- purple\n16- save\n17- Exit";
+        cout<<"1- Grayscale conversion\n2- Black and white\n3- Invert image\n4- Merge images\n5- Flip image\n6- Rotate image\n7- Darken and lighten image\n8- Crop image\n9- Adding frame to the picture\n10- Detect Image Edges\n11- Resizing Images\n12- Blur Images\n13- natural sunlight\n14- Oil painting\n15- purple\n16- Exit\nEnter your choice\n";
         cin >> filter_choice;
         if(filter_choice == 1){
             grayscale(image_name, image);
-            load_again();
+            saveandload_again(image_name, image);
         }else if(filter_choice == 2){
             black_white(image_name, image);
-            load_again();
+            saveandload_again(image_name, image);
         }else if(filter_choice == 3){
             image_inverter(image_name, image);
-            load_again();
+            saveandload_again(image_name, image);
         }else if(filter_choice == 5){
             flip_image(image_name, image);
-            load_again();
+            saveandload_again(image_name, image);
         }else if(filter_choice == 6) {
             rotation(image_name, image);
-            load_again();
+            saveandload_again(image_name, image);
+        
         }else if(filter_choice == 16){
-            save1(image_name, image);
-
-        }else if(filter_choice == 17){
             cout<<"\aExiting the program..........\n";
             break;
         }else {
