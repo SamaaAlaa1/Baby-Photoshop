@@ -1,4 +1,4 @@
-# Assignment-3
+
 #include <iostream>
 #include"Image_Class.h"
 #include<string>
@@ -7,6 +7,60 @@ using namespace std;
 bool is_valid(const string&image_name){
     ifstream file(image_name);
     return file.good();
+}
+void cropped(string& image_name , Image& image){
+    int x,y,width,height;
+    while (true){
+        cout << "Enter the dimensions to crop to: \nx: ";
+        cin >> x;
+        cout << "y: ";
+        cin >> y;
+        cout << "Width: ";
+        cin >> width;
+        cout << "Height: ";
+        cin >> height;
+        if(x < 0 || y < 0 || width <= 0 || height <= 0 || x + width > image.width || y + height > image.height) {
+            cout << "Error: Invalid cropping dimensions." << endl;
+            continue;
+        }
+        else break;
+    }
+    Image cropped(width,height);
+    for(int i=0;i<width;i++){
+        for(int j = 0;j < height; j++){
+            for(int k = 0;k < image.channels; k++){
+                cropped(i,j,k) = image(x+i,y+j,k);
+            }
+        }
+    }
+    image = cropped;
+}
+void purble(string& image_name, Image& image){
+    for(int i = 0;i < image.width; i++){
+        for(int j = 0;j < image.height; j++){
+                image(i,j,1) -= (image(i,j,1)*1/2 );
+        }
+    }
+}
+void resize(string& image_name, Image& image){
+    float height,width;
+    cout << "Enter a new dimensions:\n width: ";
+    cin >> width;
+    cout << "Height: ";
+    cin >> height;
+    Image resized(width,height);
+    float r = float(image.width) / width;
+    float c = float(image.height) / height;
+    for(float i = 0 ;i < width;i++){
+        for(float j = 0;j < height;j++){
+             int w = round(i*r);
+             int h = round(j*c);
+            for(int k = 0;k<image.channels;k++){
+                resized(i, j,k) =  image(w,h,k);
+            }
+        }
+    }
+    image = resized;
 }
 void grayscale(string& image_name, Image& image ) {
     for (int i = 0; i < image.width; i++) {
@@ -32,7 +86,7 @@ void grayscale(string& image_name, Image& image ) {
 }
 
 void black_white(string& image_name, Image& image) {
-   for (int i = 0; i < image.width; i++) {
+    for (int i = 0; i < image.width; i++) {
         for (int j = 0; j < image.height; j++) {
             int avg = 0;
             for (int k = 0; k < image.channels; k++) {
@@ -175,7 +229,6 @@ void saveandload_again(string&image_name, Image&image){
             while (true) {
                 cout << "Enter the name of the image you want to apply the filter on:\n";
                 cin >> image_name;
-                Image image(image_name);
                 if (!is_valid(image_name)) {
                     cout << "\aThe image is not found please try again....\n";
                 } else {
@@ -232,15 +285,12 @@ void saveandload_again(string&image_name, Image&image){
 int main(){
     string image_name;
     while(true) {
-
         cout << "Enter the name of the image you want to apply the filter on:\n";
         cin >> image_name;
-        Image image(image_name);
         if(!is_valid(image_name)){
             cout << "\aThe image is not found please try again....\n";
         }else {
             try {
-
                 Image image(image_name);
                 cout << "------------image loaded successfully----------\n";
                 break;
@@ -269,14 +319,26 @@ int main(){
         }else if(filter_choice == 6) {
             rotation(image_name, image);
             saveandload_again(image_name, image);
-        
-        }else if(filter_choice == 16){
+        }
+        else if(filter_choice == 8){
+            cropped(image_name, image);
+            saveandload_again(image_name, image);
+        }
+        else if(filter_choice == 11){
+            resize(image_name, image);
+            saveandload_again(image_name, image);
+
+        }
+        else if(filter_choice == 15){
+            purble(image_name, image);
+            saveandload_again(image_name, image);
+        }
+        else if(filter_choice == 16){
             cout<<"\aExiting the program..........\n";
             break;
         }else {
             cout<<"\aInvalid input please try again:\n";
         }
     }
-
     return 0;
 }
