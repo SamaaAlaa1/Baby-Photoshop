@@ -16,6 +16,10 @@ link of the diagram :
 #include<string>
 #include<fstream>
 using namespace std;
+bool is_valid(const string&image_name){
+    ifstream file(image_name);
+    return file.good();
+}
 void detected_edges(string&image_name, Image&image){
     for (int i = 0; i < image.width;i++) {
         for (int j = 0; j < image.height; j++) {
