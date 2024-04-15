@@ -15,8 +15,216 @@ link of the diagram :
 #include"Image_Class.h"
 #include<string>
 #include<fstream>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
+
+
+void print_framed_image( string image_name , Image& image) {
+    string frameColor;
+    float frameWidth;
+    // Get original image dimensions
+    int original_width = image.width;
+    int original_height = image.height;
+    int channels = image.channels;
+
+    // Get frame width and color from user input
+    cout <<"Enter the frame width you want to form the frame: ";
+    cin >> frameWidth;
+    cout <<"Enter the frame colour (white, black, gray): ";
+    cin >> frameColor;
+    string option ;
+    cout << " x) fancy frame \n y) ordinary frame "<< endl;
+    cin>> option ;
+
+    // Create a new image with dimensions greater than the original to add the frame
+    int new_width = original_width + 2 * frameWidth;
+    int new_height = original_height + 2 * frameWidth;
+
+    // Create a new image with the dimensions of the framed image
+    Image framedImage(new_width, new_height);
+    if ( option == "y"||option== "Y") {
+
+    // Fill the entire framed image with the frame color
+    for (int i = 0; i < new_width; i++) {
+        for (int j = 0; j < new_height; j++) {
+            for (int k = 0; k < channels; k++) {
+                if (i < frameWidth || i >= new_width - frameWidth || j < frameWidth || j >= new_height - frameWidth) {
+                    if (frameColor == "white") {
+                        framedImage(i, j, k) = 255;
+                    } else if (frameColor == "gray") {
+                        framedImage(i, j, k) = 127;
+                    } else if (frameColor == "black") {
+                        framedImage(i, j, k) = 0;
+                    } else {
+                        cout <<"Invalid option"<<endl;
+                    }
+                }
+            }
+        }
+    }
+
+    // put the original image onto the framed image
+    for (int n = 0; n < original_width; n++) {
+        for (int m = 0; m < original_height; m++) {
+            for (int k = 0; k < channels; k++) {
+                framedImage(n + frameWidth, m + frameWidth, k) = image(n, m, k);
+            }
+        }
+    }
+
+    // Save the resulting image
+    framedImage.saveImage("frame.jpg");
+    cout <<"The framed image is saved as 'frame.jpg'"<<endl;
+}
+    if ( option == "x"||option== "X") {
+
+    // Fill the entire framed image with the frame color
+    for (int i = 0; i < new_width; i++) {
+        for (int j = 0; j < new_height; j++) {
+            for (int k = 0; k < channels; k++) {
+                if (i < frameWidth || i >= new_width - frameWidth || j < frameWidth || j >= new_height - frameWidth) {
+                    if (frameColor == "white") {
+                        framedImage(i, j, k) = 255;
+                if ((i >= 0 && i <= 20)  || (j >= 0 && j <= 20) || (i <= image.width - 1 && i >= image.width - 21)|| (j <= image.height - 1 && j >= image.height - 21)
+                ||(i<=60 && i>=50)||(j<=60 && j>=50)||(i<=image.width-51 && i>=image.width-61)||(j<=image.height-51 && j>=image.height-61)){
+                framedImage(i ,j,k)=127;
+                }
+                    } else if (frameColor == "gray") {
+                        framedImage(i, j, k) = 127;
+                                  if ((i >= 0 && i <= 20)  || (j >= 0 && j <= 20) || (i <= image.width - 1 && i >= image.width - 21)|| (j <= image.height - 1 && j >= image.height - 21)
+                ||(i<=60 && i>=50)||(j<=60 && j>=50)||(i<=image.width-51 && i>=image.width-61)||(j<=image.height-51 && j>=image.height-61)){
+                framedImage(i ,j,k)=255;
+                }
+                    } else if (frameColor == "black") {
+                        framedImage(i, j, k) = 0;          if ((i >= 0 && i <= 20)  || (j >= 0 && j <= 20) || (i <= image.width - 1 && i >= image.width - 21)|| (j <= image.height - 1 && j >= image.height - 21)
+                ||(i<=60 && i>=50)||(j<=60 && j>=50)||(i<=image.width-51 && i>=image.width-61)||(j<=image.height-51 && j>=image.height-61)){
+                framedImage(i ,j,k)=127;
+                }
+                    } else {
+                        cout <<"Invalid option"<<endl;
+                    }
+                }
+            }
+        }
+    }
+
+    // put the original image onto the framed image
+    for (int n = 0; n < original_width; n++) {
+        for (int m = 0; m < original_height; m++) {
+            for (int k = 0; k < channels; k++) {
+                framedImage(n + frameWidth, m + frameWidth, k) = image(n, m, k);
+            }
+        }
+    }
+
+    // Save the resulting image
+    framedImage.saveImage("frame.jpg");
+    cout <<"The framed image is saved as 'frame.jpg'"<<endl;
+}}
+// this function is used to select the most in the matrix
+int most_repeated_value(vector<vector<int>>& matrix) {
+    unordered_map<int, int> frequencies;
+
+    // Loop through the matrix and count the frequency of each value
+    for (const auto& row : matrix) {
+        for (int value : row) {
+            frequencies[value]++;
+        }
+    }
+
+    // Find the value with the highest frequency
+    int most_repeated = 0;
+    int max_frequency = 0;
+    for (const auto& pair : frequencies) {
+        if (pair.second > max_frequency) {
+            most_repeated = pair.first;
+            max_frequency = pair.second;
+        }
+    }
+
+    return most_repeated;
+}
+
+void oilpainting_filter( string image_name ,Image & image  ) {
+
+    int width = image.width;
+    int height = image.height;
+     int radius ;
+    cout <<" enter the size of the matrix to apply the filter"<<endl;
+    cin>> radius ;
+
+    // Loop through each pixel of the image
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            // Initialize variables to store sum of RGB values for the neighborhood pixels
+            vector<vector<int>> matrix_red(radius, vector<int>(radius));
+            vector<vector<int>> matrix_green(radius, vector<int>(radius));
+            vector<vector<int>> matrix_blue(radius, vector<int>(radius));
+
+            // Loop through a small neighborhood around each pixel
+            for (int x = i + 1; x <= i + radius; x++) {
+                for (int y = j + 1; y <= j +radius ; y++) {
+                    // Check if the current pixel is within the image boundaries
+                    if (x >= 0 && x < width && y >= 0 && y < height) {
+                        matrix_red[x - (i + 1)][y - (j + 1)] = image(x, y,0);
+                        matrix_green[x - (i +1)][y - (j + 1)] = image(x, y ,1);
+                        matrix_blue[x - (i + 1)][y - (j + 1)] = image(x, y ,2);
+                    }
+                }
+            }
+
+            // Calculate the most repeated value for each color channel
+            int red = most_repeated_value(matrix_red);
+            int blue = most_repeated_value(matrix_blue);
+            int green = most_repeated_value(matrix_green);
+
+            // Apply the oil painting effect by assigning the most repeated values to the pixel
+             image(i, j, 0) = red;
+            image(i, j, 2) = blue;
+            image(i, j, 1) = green;
+        }
+    }
+}
+void blur_filter (string image_name ,Image& image  ){
+     int radius;
+    cout <<" enter the radius you want to apply the blur to it "<<endl;
+    cin>> radius ;
+
+    // Loop through each pixel of the image
+    for (int i = 0; i < image.width; ++i) {
+        for (int j = 0; j < image.height; ++j) {
+            // Initialize variables to store sum of RGB values for the neighborhood pixels
+            int sum_red = 0, sum_green = 0, sum_blue = 0;
+            int count_pixels = 0;
+            int area = radius*radius;
+
+            // Loop through a small neighborhood around each pixel
+            for (int x = i - 1; x <= i +area ; ++x) {
+                for (int y = j - 1; y <= j + area; ++y) {
+                    // Check if the current pixel is within the image boundaries
+                    if (x >= 0 && x < image.width && y >= 0 && y < image.height) {
+                        // Accumulate RGB values
+                        sum_red += image(x, y, 0);
+                        sum_green += image(x, y, 1);
+                        sum_blue += image(x, y, 2);
+                        count_pixels++;
+                    }
+                }
+            }
+
+            // Calculate average RGB values
+            int avg_red = sum_red / count_pixels;
+            int avg_green = sum_green / count_pixels;
+            int avg_blue = sum_blue / count_pixels;
+
+            // Assign average RGB values to the current pixel
+            image(i, j, 0) = avg_red;
+            image(i, j, 1) = avg_green;
+            image(i, j, 2) = avg_blue;
+        }
+    }}
 bool is_valid(const string&image_name){
     ifstream file(image_name);
     return file.good();
@@ -665,6 +873,11 @@ void saveandload_again(string&image_name, Image&image){
             cropped(image_name, image);
             saveandload_again(image_name, image);
         }
+        else if(filter_choice == 9){
+            print_framed_image(image_name, image);
+            saveandload_again(image_name, image);
+
+        }
         else if(filter_choice == 10){
             detected_edges(image_name, image);
             saveandload_again(image_name, image);
@@ -674,9 +887,19 @@ void saveandload_again(string&image_name, Image&image){
             resize(image_name, image);
             saveandload_again(image_name, image);
 
+        }
+        else if(filter_choice == 12){
+            blur_filter(image_name, image);
+            saveandload_again(image_name, image);
+
         }else if(filter_choice == 13){
             sunlight(image_name, image);
             saveandload_again(image_name, image);
+        }
+        else if(filter_choice == 14){
+            oilpainting_filter(image_name, image);
+            saveandload_again(image_name, image);
+
         }
         else if(filter_choice == 15){
             purble(image_name, image);
