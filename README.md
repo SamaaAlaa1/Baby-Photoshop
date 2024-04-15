@@ -16,6 +16,70 @@ link of the diagram :
 #include<string>
 #include<fstream>
 using namespace std;
+void detected_edges(string&image_name, Image&image){
+    for (int i = 0; i < image.width;i++) {
+        for (int j = 0; j < image.height; j++) {
+            unsigned int avg = 0;
+            for (int k = 0; k < 3; k++) {
+                if (image(i, j, k) >= 255) {
+                    image(i, j, k) = 255;
+                }
+                if (image(i, j, k) <= 0) {
+                    image(i, j, k) = 0;
+                }
+                avg += image(i, j, k);
+
+            }
+            avg /= 3;
+            for (int k = 0; k < 3; k++) {
+                image(i, j, k) = avg;
+
+            }
+        }
+    }
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            for (int k = 0; k < image.channels; k++) {
+                if (image(i, j, k) >= 127.5) {
+                    image(i, j, k) = 0;
+                } else {
+                    image(i, j, k) = 255;
+                }
+            }
+        }
+    }
+
+    for(int i=0; i<image.width; i++){
+        for(int j=0; j<image.height; j++) {
+            for (int k = 0; k < 3; k++) {
+                if(i==0 || i==image.width-1 ||j==0 ||j==image.height){
+                    if(i==0) image(i, j, k) =255;
+                    if(i==image.width-1) image(i, j, k) =255;
+                    if(j==0) image(i, j, k) =255;
+                    if(j==image.height-1) image(i, j, k) =255;
+                }
+
+
+            }
+        }
+    }
+
+    for(int i=1; i<image.width-1; i++) {
+        for (int j = 1; j < image.height-1; j++) {
+            for (int k = 0; k < 3; k++) {
+                if (image(i, j, k) == 0)
+                    if (image(i - 1, j, k) == 255 && image(i + 1, j, k) == 255 || image(i, j + 1, k) == 255 &&
+                                                                                  image(i, j - 1, k) == 255) {
+                        image(i, j, k) = 0;
+
+                    } else {
+                        image(i, j, k) = 255;
+                    }
+
+            }
+        }
+    }
+}
 void lighten_and_darken(string& image_name, Image& image){
     cout<<"Enter your choice.......\n1-Make the image lighter\n2-Make the image darker"<<endl;
     int choice;
@@ -564,6 +628,11 @@ while(true) {
             cropped(image_name, image);
             saveandload_again(image_name, image);
         }
+        else if(filter_choice == 10){
+            detected_edges(image_name, image);
+            saveandload_again(image_name, image);
+        }
+        
         else if(filter_choice == 11){
             resize(image_name, image);
             saveandload_again(image_name, image);
