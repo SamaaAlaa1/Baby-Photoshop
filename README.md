@@ -15,6 +15,7 @@ link of the diagram :
 #include"Image_Class.h"
 #include<string>
 #include<fstream>
+
 using namespace std;
 bool is_valid(const string&image_name){
     ifstream file(image_name);
@@ -89,7 +90,7 @@ void lighten_and_darken(string& image_name, Image& image){
     int choice;
     cin>>choice;
     if(choice == 1){
-       for(int i=0; i<image.width; i++){
+        for(int i=0; i<image.width; i++){
             for(int j=0; j<image.height; j++){
                 for(int k=0; k<3; k++){
 
@@ -193,8 +194,26 @@ void merge(string name1){
                 }
 
 
+            }while (true){
+                cout<<"Enter your choice.......\n1- store a new image\n2- exciting without save\n";
+                int save_choice;
+                cin>>save_choice;
+                if(save_choice == 1){
+                    string filename;
+                    cout<<"Enter the new image name  with extension:\n(.jpg , .bmp, .png, .tga\n";
+                    cin>>filename;
+                    image.saveImage(filename);
+                    cout << "....the image is saved successfully...." << endl;
+                    break;
+                }else if (save_choice == 2){
+                    cout<<"Exciting the program...............\n";
+                    break;
+                }else{
+                    cout<<"\aInvalid input please try again\n";
+                }
             }
-        }else if(resize_choice == 2){
+        }
+        else if(resize_choice == 2){
             int minwidth = min(image1.width, image2.width);
             int minheight = min(image1.height, image2.height);
             Image image(minwidth, minheight);
@@ -240,6 +259,23 @@ void merge(string name1){
                 }
 
 
+            }while (true){
+                cout<<"Enter your choice.......\n1- store a new image\n2- exciting without save\n";
+                int save_choice;
+                cin>>save_choice;
+                if(save_choice == 1){
+                    string filename;
+                    cout<<"Enter the new image name  with extension:\n(.jpg , .bmp, .png, .tga\n";
+                    cin>>filename;
+                    image.saveImage(filename);
+                    cout << "....the image is saved successfully...." << endl;
+                    break;
+                }else if (save_choice == 2){
+                    cout<<"Exciting the program...............\n";
+                    break;
+                }else{
+                    cout<<"\aInvalid input please try again\n";
+                }
             }
         }else{
             cout<<"Invalid input please try again\a\n";
@@ -293,10 +329,7 @@ void sunlight(string& image_name, Image& image){
         }
     }
 }
-bool is_valid(const string&image_name){
-    ifstream file(image_name);
-    return file.good();
-}
+
 void cropped(string& image_name , Image& image){
     int x,y,width,height;
     while (true){
@@ -327,7 +360,7 @@ void cropped(string& image_name , Image& image){
 void purble(string& image_name, Image& image){
     for(int i = 0;i < image.width; i++){
         for(int j = 0;j < image.height; j++){
-                image(i,j,1) -= (image(i,j,1)*1/2 );
+            image(i,j,1) -= (image(i,j,1)*1/2 );
         }
     }
 }
@@ -342,8 +375,8 @@ void resize(string& image_name, Image& image){
     float c = float(image.height) / height;
     for(float i = 0 ;i < width;i++){
         for(float j = 0;j < height;j++){
-             int w = round(i*r);
-             int h = round(j*c);
+            int w = round(i*r);
+            int h = round(j*c);
             for(int k = 0;k<image.channels;k++){
                 resized(i, j,k) =  image(w,h,k);
             }
@@ -600,7 +633,7 @@ void saveandload_again(string&image_name, Image&image){
             }
         }
     }
-while(true) {
+    while(true) {
         Image image(image_name);
         int filter_choice;
         cout<<"1- Grayscale conversion\n2- Black and white\n3- Invert image\n4- Merge images\n5- Flip image\n6- Rotate image\n7- Darken and lighten image\n8- Crop image\n9- Adding frame to the picture\n10- Detect Image Edges\n11- Resizing Images\n12- Blur Images\n13- natural sunlight\n14- Oil painting\n15- purple\n16- Exit\nEnter your choice\n";
@@ -616,7 +649,7 @@ while(true) {
             saveandload_again(image_name, image);
         }else if(filter_choice == 4){
             merge(image_name);
-           
+
         }
         else if(filter_choice == 5){
             flip_image(image_name, image);
@@ -636,7 +669,7 @@ while(true) {
             detected_edges(image_name, image);
             saveandload_again(image_name, image);
         }
-        
+
         else if(filter_choice == 11){
             resize(image_name, image);
             saveandload_again(image_name, image);
