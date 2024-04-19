@@ -76,7 +76,7 @@ void print_framed_image( string image_name , Image& image) {
 
     // Save the resulting image
     framedImage.saveImage("frame.jpg");
-    cout <<"The framed image is saved as 'frame.jpg'"<<endl;
+
 }
     if ( option == "x"||option== "X") {
 
@@ -121,7 +121,7 @@ void print_framed_image( string image_name , Image& image) {
 
     // Save the resulting image
     framedImage.saveImage("frame.jpg");
-    cout <<"The framed image is saved as 'frame.jpg'"<<endl;
+
 }}
 // this function is used to select the most in the matrix
 int most_repeated_value(vector<vector<int>>& matrix) {
@@ -719,6 +719,7 @@ void rotation ( string& image_name, Image& image) {
                 }
             }
         }
+    rotated_image.saveImage("rotate.jpg");
     }
     else if (angle == 90) {
 
@@ -735,6 +736,7 @@ void rotation ( string& image_name, Image& image) {
                 }
             }
         }
+         rotated_image.saveImage("rotate.jpg");
     }
     else if (angle == 270) {
 
@@ -747,6 +749,7 @@ void rotation ( string& image_name, Image& image) {
                 }
             }
         }
+         rotated_image.saveImage("rotate.jpg");
     }
 }
 void saveandload_again(string&image_name, Image&image){
