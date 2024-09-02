@@ -1,16 +1,4 @@
-/*
- Author : Bassant Salem Tohami   _ID : 20231035 _s11
-        : grayscale_merge images_Darken and lighten images_detect edges_sunlight_main
-Author : Samaa Alaa Abdelmaqsoud  _ID : 20231035 _s11
-        :black and white_flip image_Crop Images_Resizing Images_purple
-Author : Marwa Sayed Sallam  ID : 20231158 _s11
-        :Invert Image_Rotate Image_ِAdding a Frame to the Picture_Blur Images_oil painting
-link of our repo on github :
-            https://github.com/SamaaAlaa1/Assignment-3.git
-link of the diagram :
-        https://drive.google.com/file/d/1XqwfDdx95vggXi2vvnk9bGtNcsAdSMbi/view?usp=sharing
 
-  */
 #include <iostream>
 #include"Image_Class.h"
 #include<string>
